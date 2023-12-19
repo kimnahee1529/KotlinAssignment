@@ -32,6 +32,11 @@ class SignUpActivity : AppCompatActivity() {
                     putExtra("userName", userName)
                     putExtra("userId", userId)
                     putExtra("userPassword", userPassword)
+                //apply를 쓰지 않았을 때
+//                val resultIntent = Intent()
+//                resultIntent.putExtra("userName", userName)
+//                resultIntent.putExtra("userId", userId)
+//                resultIntent.putExtra("userPassword", userPassword)
                 }
                 setResult(Activity.RESULT_OK, resultIntent)
                 finish() // SignUpActivity 종료
