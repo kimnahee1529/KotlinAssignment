@@ -1,5 +1,6 @@
 package com.nhkim.selfintroduction
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -27,11 +28,13 @@ class SignUpActivity : AppCompatActivity() {
             if(userName == "" || userId == "" || userPassword == ""){
                 Toast.makeText(this, "입력되지 않은 정보가 있습니다", Toast.LENGTH_SHORT).show()
             }else{
-                val intent = Intent(this, HomeActivity::class.java)
-                intent.putExtra("userName", userName)
-                intent.putExtra("userId", userId)
-                intent.putExtra("userPassword", userPassword)
-                startActivity(intent)
+                val resultIntent = Intent().apply {
+                    putExtra("userName", userName)
+                    putExtra("userId", userId)
+                    putExtra("userPassword", userPassword)
+                }
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish() // SignUpActivity 종료
             }
 
         }
