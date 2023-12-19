@@ -28,6 +28,15 @@ class SignInActivity : AppCompatActivity() {
                 idText.setText(userId)
                 passwordText.setText(userPassword)
             }
+
+            //let을 쓰지 않았을 때
+//            if (data != null) { // data가 null이 아닐 때 실행
+//                val userId = data.getStringExtra("userId") ?: ""
+//                val userPassword = data.getStringExtra("userPassword") ?: ""
+//
+//                idText.setText(userId)
+//                passwordText.setText(userPassword)
+//            }
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +45,7 @@ class SignInActivity : AppCompatActivity() {
 
         idText = findViewById(R.id.signInIdEditText)
         passwordText = findViewById(R.id.signInPasswordEditText)
+
         val loginBtn = findViewById<Button>(R.id.signInLoginBtn)
         val signupBtn = findViewById<Button>(R.id.signInSignUpBtn)
 
