@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import org.w3c.dom.Text
 
 class HomeActivity : AppCompatActivity() {
@@ -15,7 +16,7 @@ class HomeActivity : AppCompatActivity() {
 
         val idText = findViewById<TextView>(R.id.homeId)
         val nameText = findViewById<TextView>(R.id.homeName)
-        val finishBtn = findViewById<Button>(R.id.finishBtn)
+        val finishBtn = findViewById<ConstraintLayout>(R.id.finishBtn)
 
         val userId = intent.getStringExtra("userId")
         val userName = intent.getStringExtra("userName")
