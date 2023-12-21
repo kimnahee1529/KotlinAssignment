@@ -7,132 +7,121 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
+import android.widget.Adapter
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import org.w3c.dom.Text
 
 class SignUpActivity : AppCompatActivity() {
+
+    private val etName: EditText by lazy {
+        findViewById(R.id.et_name)
+    }
+    private val tvNameError: TextView by lazy {
+        findViewById(R.id.tv_name_error)
+    }
+    private val etEmail: EditText by lazy {
+        findViewById(R.id.et_email)
+    }
+    private val tvEmailError: TextView by lazy {
+        findViewById(R.id.tv_email_error)
+    }
+    private val serviceProvider: Spinner by lazy {
+        findViewById(R.id.service_provider)
+    }
+
+    private val editTexts
+        get() = listOf(
+            etName,etEmail
+        )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
-        val nameEditText = findViewById<EditText>(R.id.signUpNameEditText)
-        val emailEditText = findViewById<EditText>(R.id.signUpEmailEditText)
-        val passwordEditText = findViewById<EditText>(R.id.signUpPasswordEditText)
-        val passwordCheckEditText = findViewById<EditText>(R.id.signUpPasswordCheckEditText)
+        initView()
 
-        val signupBtn = findViewById<Button>(R.id.SignUpSignUpBtn)
-        val nameWarning = findViewById<TextView>(R.id.signUpNameWarningText)
-        val emailWarning = findViewById<TextView>(R.id.signUpEmailWarningText)
-        val passWordWarning = findViewById<TextView>(R.id.signUpPasswordWarningText)
-        val passWordCheckWarning = findViewById<TextView>(R.id.signUpPasswordCheckWarningText)
+    }
 
-//        var userName = nameEditText.text.toString()
-        lateinit var userName: String
-        lateinit var useremail: String
-        lateinit var userPassword: String
-        lateinit var userPasswordCheck: String
+    private fun initView(){
+        setEditTextListener()
+        setServiceProvider()
+    }
 
-        var isNameEnable = false
-        var isEmailEnable = false
-        var isPasswordEnable = false
-        var isPasswordCheckEnable = false
-        var isSignUpBtn = false
-        Log.d("1isNameEnable", isNameEnable.toString())
+    private fun setServiceProvider() {
+        serviceProvider.adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            listOf(
+                getString(R.string.sign_up_email_provider_gmail),
+                getString(R.string.sign_up_email_provider_kakao),
+                getString(R.string.sign_up_email_provider_naver),
+                getString(R.string.sign_up_email_provider_direct)
 
-        nameWarning.isVisible = false
-        emailWarning.isVisible = false
-        passWordWarning.isVisible = false
-        passWordCheckWarning.isVisible = false
+            )
+        )
 
-        nameEditText.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(p0: Editable?) {
-                userName = p0.toString()
-                isNameEnable = userName.isNotBlank()
-                signupBtn.isEnabled = isPossibleSignUp(isNameEnable, isEmailEnable, isPasswordEnable, isPasswordCheckEnable)
+        serviceProvider.onItemClickListener = object : AdapterView.OnItemSelectedListener,
+            AdapterView.OnItemClickListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                TODO("Not yet implemented")
             }
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.d("이름 바뀌기 전", p0.toString())
-            }
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.d("이름 바뀌었을 때", p0.toString())
-            }
-        })
 
-        emailEditText.addTextChangedListener(object : TextWatcher {
+            override fun onNothingSelected(p0: AdapterView<*>?) = Unit
 
-            override fun afterTextChanged(p0: Editable?) {
-                useremail = p0.toString()
-                isEmailEnable = useremail.isNotBlank()
-                signupBtn.isEnabled = isPossibleSignUp(isNameEnable, isEmailEnable, isPasswordEnable, isPasswordCheckEnable)
+            override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                TODO("Not yet implemented")
             }
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.d("이메일 바뀌기 전", p0.toString())
-            }
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.d("이메일 바뀌었을 때", p0.toString())
-            }
-        })
-
-        passwordEditText.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(p0: Editable?) {
-                userPassword = p0.toString()
-                isPasswordEnable = userPassword.isNotBlank()
-                signupBtn.isEnabled = isPossibleSignUp(isNameEnable, isEmailEnable, isPasswordEnable, isPasswordCheckEnable)
-            }
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.d("이메일 바뀌기 전", p0.toString())
-            }
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.d("이메일 바뀌었을 때", p0.toString())
-            }
-        })
-
-        passwordCheckEditText.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(p0: Editable?) {
-                userPasswordCheck = p0.toString()
-                isPasswordCheckEnable = userPasswordCheck.isNotBlank()
-                signupBtn.isEnabled = isPossibleSignUp(isNameEnable, isEmailEnable, isPasswordEnable, isPasswordCheckEnable)
-            }
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.d("이메일 바뀌기 전", p0.toString())
-            }
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.d("이메일 바뀌었을 때", p0.toString())
-            }
-        })
-
-//        if(isNameEnable && isEmailEnable){
-//            Log.d("마지막 isNameEnable", isNameEnable.toString())
-//            Log.d("마지막 isEmailEnable", isEmailEnable.toString())
-//            isSignUpBtn = true
-//            Log.d("마지막 isSignUpBtn", isSignUpBtn.toString())
-//        }
-
-        signupBtn.setOnClickListener {
-            val resultIntent = Intent().apply {
-                putExtra("userName", userName)
-                putExtra("userId", useremail)
-                putExtra("userPassword", userPassword)
-                //apply를 쓰지 않았을 때
-//                val resultIntent = Intent()
-//                resultIntent.putExtra("userName", userName)
-//                resultIntent.putExtra("userId", userId)
-//                resultIntent.putExtra("userPassword", userPassword)
-            }
-            setResult(RESULT_OK, resultIntent)
-            finish() // SignUpActivity 종료
 
         }
     }
-    fun isPossiblePassword(password: String){
 
+    //editTexts들을 순회하면서 addTextChangedListener와 setOnFocusChangeListener를 등록
+    private fun setEditTextListener(){
+        editTexts.forEach { editText ->
+            editText.addTextChangedListener{
+                editText.setErrorMessage()
+            }
+
+            editText.setOnFocusChangeListener{ v, hasFocous ->
+                if(hasFocous.not()){
+                    editText.setErrorMessage()
+                }
+            }
+        }
+    }
+
+    private fun EditText.setErrorMessage(){
+        when(this){
+            etName -> {
+                tvNameError.text = getMessageValidName()
+            }
+            etEmail -> {
+                tvEmailError.text = getMessageValidEmail()
+            }
+        }
+    }
+
+    private fun getMessageValidName(): String = if(etName.text.toString().isBlank()){
+        getString(R.string.sign_up_name_error)
+
+    }else{
+        ""
+    }
+
+    private fun getMessageValidEmail(): String = if(etEmail.text.toString().isBlank()){
+        getString(R.string.sign_up_email_error_blank)
+
+    }else{
+        ""
     }
 
     fun isPossibleSignUp(isNameEnable: Boolean, isEmailEnable: Boolean, isPasswordEnable: Boolean, isPasswordCheckEnable: Boolean): Boolean{
