@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="비밀번호를 입력하세요"
             android:inputType="text"
             android:password="true"
             android:textSize="14sp" />
@@ -42,55 +41,43 @@
             android:text="비밀번호가 다릅니다."
             android:textColor="#FF7576"
             android:textSize="13sp"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/signUpImage"
-        android:layout_width="200dp"
-        android:layout_height="250dp"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
 
     <LinearLayout
         android:id="@+id/signUpNameLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/signUpImage">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/nameText"
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="이름" />
+            android:text="@string/sign_up_name" />
 
         <EditText
-            android:id="@+id/signUpNameEditText"
+            android:id="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="이름을 입력하세요"
             android:inputType="text"
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/signUpNameWarningText"
+            android:id="@+id/tv_name_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="이름을 입력해주세요."
+            android:text="@string/sign_up_name_error"
             android:textColor="#FF7576"
-            android:textSize="13sp"
-            android:visibility="invisible"/>
+            android:textSize="13sp" />
 
     </LinearLayout>
 
@@ -99,61 +86,69 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpNameLinearLayout">
 
+        <EditText
+            android:id="@+id/et_email2"
+            android:layout_width="100dp"
+            android:layout_height="39dp"
+            android:layout_marginEnd="20dp"
+            android:inputType="text"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_email_error"
+            app:layout_constraintEnd_toStartOf="@+id/sp_email"
+            app:layout_constraintTop_toBottomOf="@+id/service_provider"
+            app:layout_constraintVertical_bias="1.0" />
+
         <TextView
-            android:id="@+id/signUpEmailText"
+            android:id="@+id/tv_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="1dp"
-            android:layout_marginBottom="1dp"
             android:text="이메일"
-            app:layout_constraintBottom_toTopOf="@+id/signUpEmailEditText"
+            app:layout_constraintBottom_toTopOf="@+id/et_email"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
-            android:id="@+id/planets_spinner"
+            android:id="@+id/service_provider"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            app:layout_constraintBottom_toTopOf="@+id/signUpEmailWarningText"
+            app:layout_constraintBottom_toTopOf="@+id/tv_email_error"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/signUpEmailEditText"
-            app:layout_constraintTop_toTopOf="@+id/signUpEmailEditText" />
+            app:layout_constraintTop_toTopOf="@+id/et_email" />
 
         <EditText
-            android:id="@+id/signUpEmailEditText"
-            android:layout_width="167dp"
+            android:id="@+id/et_email"
+            android:layout_width="100dp"
             android:layout_height="39dp"
-            android:layout_weight="3"
-            android:ems="10"
-            android:hint="아이디를 입력하세요"
+            android:layout_marginEnd="10dp"
             android:inputType="text"
             android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/signUpEmailWarningText"
+            app:layout_constraintBottom_toTopOf="@+id/tv_email_error"
+            app:layout_constraintEnd_toStartOf="@+id/et_email2"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signUpEmailText"
+            app:layout_constraintTop_toBottomOf="@+id/service_provider"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/signUpEmailWarningText"
+            android:id="@+id/tv_email_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:text="이메일을 입력해주세요."
+            android:text="@string/sign_up_email_error_blank"
             android:textColor="#FF7576"
             android:textSize="13sp"
-            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signUpEmailEditText" />
+            app:layout_constraintTop_toBottomOf="@+id/et_email" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -162,7 +157,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -180,18 +175,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="비밀번호를 입력하세요"
             android:inputType="text"
             android:password="true"
             android:textSize="14sp" />
+
         <TextView
             android:id="@+id/signUpPasswordWarningText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="특수문자 입력이 필요합니다."
-            android:textColor="#FF7576"
-            android:textSize="13sp"
-            android:visibility="invisible"/>
+            android:text="@string/sign_up_password_hint"
+            android:textColor="@color/light_gray"
+            android:textSize="13sp" />
 
     </LinearLayout>
 
@@ -200,14 +194,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="15dp"
-        android:text="회원가입"
-
+        android:layout_marginBottom="30dp"
         android:enabled="false"
+        android:text="회원가입"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUpPasswordCheckLinearLayout" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
