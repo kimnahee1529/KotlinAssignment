@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/iv_item"
             android:layout_width="130dp"
             android:layout_height="130dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_item_title"
             android:layout_width="212dp"
             android:layout_height="46dp"
             android:layout_marginStart="20dp"
@@ -35,21 +35,22 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/iv_item"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tv_item_ad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:text="수원시 영통구 원천동"
             android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintStart_toEndOf="@+id/iv_item"
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_title" />
 
         <TextView
+            android:id="@+id/tv_item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -57,39 +58,44 @@
             android:text="50,000원"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            app:layout_constraintStart_toEndOf="@+id/iv_item"
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_ad" />
 
         <ImageView
+            android:id="@+id/iv_chat"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:src="@drawable/chat"
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textView4" />
+            app:layout_constraintEnd_toStartOf="@+id/tv_chat_num" />
 
         <TextView
-            android:id="@+id/textView4"
-            android:layout_width="20dp"
+            android:id="@+id/tv_chat_num"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_marginEnd="8dp"
+            android:text="16"
             android:layout_marginBottom="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView2" />
+            app:layout_constraintEnd_toStartOf="@+id/tv_heart" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/tv_heart"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:src="@drawable/heart"
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textView3" />
+            app:layout_constraintEnd_toStartOf="@+id/tv_heart_num" />
 
         <TextView
-            android:id="@+id/textView3"
-            android:layout_width="20dp"
+            android:id="@+id/tv_heart_num"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
+            android:text="125"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
