@@ -9,16 +9,21 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/iv_item"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:id="@+id/iv_item_image"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            android:clipToOutline="true"
+            android:src="@drawable/pizza"
+            android:background="@drawable/rounded_corners"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -26,16 +31,15 @@
         <TextView
             android:id="@+id/tv_item_title"
             android:layout_width="212dp"
-            android:layout_height="46dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="프라다 복조리백프라다 복조리백프라다 복조리백프라다 복조리백프라다 복조리백프라다 복조리백"
+            android:text="울산 동해오션뷰 60평 복층 펜트하우스 1일 숙박권 펜션 힐링 숙소 별장"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/iv_item"
+            app:layout_constraintStart_toEndOf="@+id/iv_item_image"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -43,10 +47,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="4dp"
             android:text="수원시 영통구 원천동"
             android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/iv_item"
+            app:layout_constraintStart_toEndOf="@+id/iv_item_image"
             app:layout_constraintTop_toBottomOf="@+id/tv_item_title" />
 
         <TextView
@@ -54,21 +58,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:text="50,000원"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/iv_item"
+            app:layout_constraintStart_toEndOf="@+id/iv_item_image"
             app:layout_constraintTop_toBottomOf="@+id/tv_item_ad" />
 
         <ImageView
             android:id="@+id/iv_chat"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/chat"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginEnd="4dp"
-            android:layout_marginBottom="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/chat"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_heart_num"
             app:layout_constraintEnd_toStartOf="@+id/tv_chat_num" />
 
         <TextView
@@ -77,18 +80,16 @@
             android:layout_height="20dp"
             android:layout_marginEnd="8dp"
             android:text="16"
-            android:layout_marginBottom="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_heart_num"
             app:layout_constraintEnd_toStartOf="@+id/tv_heart" />
 
         <ImageView
             android:id="@+id/tv_heart"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/heart"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginEnd="4dp"
-            android:layout_marginBottom="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/heart"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_heart_num"
             app:layout_constraintEnd_toStartOf="@+id/tv_heart_num" />
 
         <TextView
@@ -96,8 +97,6 @@
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:text="125"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
