@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.nhkim.applemarket.databinding.ActivityDetailBinding
 import com.nhkim.applemarket.databinding.ActivityMainBinding
+import java.text.DecimalFormat
 
 class DetailActivity : AppCompatActivity() {
 
@@ -25,11 +26,15 @@ class DetailActivity : AppCompatActivity() {
         binding.ivItemImage.setImageResource(receivedItem!!.itemImage)
         binding.tvSeller.text = receivedItem.seller
         binding.tvAdd.text = receivedItem.address
-//        binding.tvItemTitle.text = receivedItem.title
-//        binding.tvItemContent.text = receivedItem.content
-//        binding.tvItemPrice.setText(receivedItem.price)
+        binding.tvItemTitle.text = receivedItem.title
+        binding.tvItemContent.text = receivedItem.content
+
+        val formatter = DecimalFormat("#,###원")
+        binding.tvItemPrice.text = formatter.format(receivedItem.price)
+
         binding.ivBackBtn.setOnClickListener {
             finish()
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
 }
