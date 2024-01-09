@@ -81,7 +81,6 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
 
-                Toast.makeText(this@MainActivity," ${position}번째 물건 선택!", Toast.LENGTH_SHORT).show()
             }
         }
 

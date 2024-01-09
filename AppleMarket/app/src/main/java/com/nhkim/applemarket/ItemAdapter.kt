@@ -26,7 +26,6 @@ class ItemAdapter(val item: MutableList<Item>) : RecyclerView.Adapter<ItemAdapte
             itemClick?.onClick(it, position)
         }
         holder.itemView.clipToOutline = true
-
     }
 
     override fun getItemCount(): Int = item.size
