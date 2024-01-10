@@ -25,7 +25,6 @@ class ItemAdapter(val item: MutableList<Item>) : RecyclerView.Adapter<ItemAdapte
         holder.itemView.setOnClickListener{
             itemClick?.onClick(it, position)
         }
-        holder.itemView.clipToOutline = true
     }
 
     override fun getItemCount(): Int = item.size
@@ -47,6 +46,7 @@ class ItemAdapter(val item: MutableList<Item>) : RecyclerView.Adapter<ItemAdapte
             price.text = formatter.format(item.price)
 
             itemImage.setImageResource(item.itemImage)
+            itemImage.clipToOutline = true
             heart.text = item.like.toString()
             chat.text = item.chat.toString()
         }
