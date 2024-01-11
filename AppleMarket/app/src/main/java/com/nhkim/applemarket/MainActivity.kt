@@ -14,47 +14,39 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.AlphaAnimation
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nhkim.applemarket.ItemManager.itemList
 import com.nhkim.applemarket.databinding.ActivityMainBinding
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     val itemKey = "Item"
+    private var selectedPosition = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val itemAdapter = ItemAdapter(itemList)
+        setupRecyclerView()
+        setupFloatingActionButton()
+        setupNotificationOnClickListeners()
 
-        with(binding.rvMain){
-            this@with.adapter = itemAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
-        }
+    }
 
-
+    private fun setupNotificationOnClickListeners() {
         binding.ivBell.setOnClickListener {
             notification()
         }
+    }
 
-        itemAdapter.itemClick = object: ItemAdapter.ItemClick{
-            override fun onClick(view: View, position: Int) {
-                val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
-                    putExtra(itemKey, itemList[position])
-                }
-                startActivity(intent)
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-
-            }
-        }
-
+    private fun setupFloatingActionButton() {
         val fadeIn = AlphaAnimation(0f, 1f).apply { duration = 500 }
         val fadeOut = AlphaAnimation(1f, 0f).apply { duration = 500 }
         var isTop = true
@@ -78,28 +70,56 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+
+        if (!binding.rvMain.canScrollVertically(-1)) {
+            binding.floatingBtn.visibility = View.GONE
+        }
         binding.floatingBtn.setOnClickListener {
             binding.rvMain.smoothScrollToPosition(0)
         }
-
     }
+
+    private fun setupRecyclerView() {
+        val itemAdapter = ItemAdapter(itemList)
+
+        with(binding.rvMain){
+            this@with.adapter = itemAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity)
+        }
+
+        itemAdapter.itemClick = object: ItemAdapter.ItemClick{
+            override fun onClick(view: View, position: Int) {
+                val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
+                    putExtra(itemKey, itemList[position])
+                }
+                startActivity(intent)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+
+            }
+
+            override fun onLongClick(view: View, position: Int): Boolean {
+                selectedPosition = position
+                deleteDialog(itemAdapter)
+                return true
+            }
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-        popUpDialog()
+        exitDialog()
     }
-    private fun popUpDialog(){
-        var builder = AlertDialog.Builder(this)
+    private fun exitDialog(){
+        val builder = AlertDialog.Builder(this)
         builder.setTitle("종료")
         builder.setMessage("정말 종료하시겠습니까?")
         builder.setIcon(R.drawable.chat)
 
-        // 버튼 클릭시에 무슨 작업을 할 것인가!
-        val listener = object : DialogInterface.OnClickListener {
-            override fun onClick(p0: DialogInterface?, p1: Int) {
-                when (p1) {
-                        DialogInterface.BUTTON_POSITIVE ->
-                            finish()
-                }
+        val listener = DialogInterface.OnClickListener { _, p1 ->
+            when (p1) {
+                DialogInterface.BUTTON_POSITIVE ->
+                    finish()
             }
         }
 
@@ -109,7 +129,29 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
-    fun notification(){
+    private fun deleteDialog(itemAdapter: ItemAdapter) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("상품 삭제")
+        builder.setMessage("상품을 정말로 삭제하시겠습니까?")
+        builder.setIcon(R.drawable.chat)
+
+        val listener = DialogInterface.OnClickListener { _, p1 ->
+            when (p1) {
+                DialogInterface.BUTTON_POSITIVE ->
+                    if(selectedPosition >= 0){
+                        itemAdapter.removeItem(selectedPosition)
+                        selectedPosition = -1
+                    }
+            }
+        }
+
+        builder.setPositiveButton("확인", listener)
+        builder.setNegativeButton("취소", listener)
+
+        builder.show()
+    }
+
+    private fun notification(){
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         val builder: NotificationCompat.Builder
