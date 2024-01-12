@@ -1,7 +1,9 @@
 package com.nhkim.applemarket
 
+import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.annotation.RequiresApi
 
 data class Item(
     val title: String?,
@@ -10,9 +12,11 @@ data class Item(
     val price: Int,
     val itemImage: Int,
     val address: String?,
-    val like: Int,
-    val chat: Int
+    var like: Int,
+    val chat: Int,
+    var isLike: Boolean
 ) : Parcelable {
+    @RequiresApi(Build.VERSION_CODES.Q)
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
@@ -21,7 +25,8 @@ data class Item(
         parcel.readInt(),
         parcel.readString(),
         parcel.readInt(),
-        parcel.readInt()
+        parcel.readInt(),
+        parcel.readBoolean()
     ) {
     }
 
@@ -41,6 +46,7 @@ data class Item(
     }
 
     companion object CREATOR : Parcelable.Creator<Item> {
+        @RequiresApi(Build.VERSION_CODES.Q)
         override fun createFromParcel(parcel: Parcel): Item {
             return Item(parcel)
         }
