@@ -26,7 +26,6 @@ import com.nhkim.applemarket.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    val itemKey = "Item"
     private var selectedPosition = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,17 +50,18 @@ class MainActivity : AppCompatActivity() {
         val fadeOut = AlphaAnimation(1f, 0f).apply { duration = 500 }
         var isTop = true
 
-        binding.rvMain.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        binding.rvMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!binding.rvMain.canScrollVertically(-1)
-                    && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    && newState == RecyclerView.SCROLL_STATE_IDLE
+                ) {
                     binding.floatingBtn.startAnimation(fadeOut)
                     binding.floatingBtn.visibility = View.GONE
                     isTop = true
                     Log.d("myLog", "Top")
                 } else {
-                    if(isTop) {
+                    if (isTop) {
                         binding.floatingBtn.visibility = View.VISIBLE
                         binding.floatingBtn.startAnimation(fadeIn)
                         isTop = false
@@ -82,15 +82,16 @@ class MainActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         val itemAdapter = ItemAdapter(itemList)
 
-        with(binding.rvMain){
-            this@with.adapter = itemAdapter
+        with(binding.rvMain) {
+            adapter = itemAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
         }
 
-        itemAdapter.itemClick = object: ItemAdapter.ItemClick{
+        itemAdapter.itemClick = object : ItemAdapter.ItemClick {
             override fun onClick(view: View, position: Int) {
                 val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
-                    putExtra(itemKey, itemList[position])
+                    putExtra(Constants.ITEM_INDEX, position)
+                    putExtra(Constants.ITEM_OBJECT, itemList[position])
                 }
                 startActivity(intent)
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -110,16 +111,20 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         exitDialog()
     }
-    private fun exitDialog(){
+
+    private fun exitDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("종료")
         builder.setMessage("정말 종료하시겠습니까?")
         builder.setIcon(R.drawable.chat)
 
-        val listener = DialogInterface.OnClickListener { _, p1 ->
-            when (p1) {
+        val listener = DialogInterface.OnClickListener { dialog, whichButton ->
+            when (whichButton) {
                 DialogInterface.BUTTON_POSITIVE ->
                     finish()
+
+                DialogInterface.BUTTON_NEGATIVE ->
+                    dialog.dismiss()
             }
         }
 
@@ -135,10 +140,10 @@ class MainActivity : AppCompatActivity() {
         builder.setMessage("상품을 정말로 삭제하시겠습니까?")
         builder.setIcon(R.drawable.chat)
 
-        val listener = DialogInterface.OnClickListener { _, p1 ->
-            when (p1) {
+        val listener = DialogInterface.OnClickListener { _, whichButton ->
+            when (whichButton) {
                 DialogInterface.BUTTON_POSITIVE ->
-                    if(selectedPosition >= 0){
+                    if (selectedPosition >= 0) {
                         itemAdapter.removeItem(selectedPosition)
                         selectedPosition = -1
                     }
@@ -151,14 +156,14 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
-    private fun notification(){
+    private fun notification() {
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         val builder: NotificationCompat.Builder
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // 26 버전 이상
-            val channelId="one-channel"
-            val channelName="My Channel One"
+            val channelId = "one-channel"
+            val channelName = "My Channel One"
             val channel = NotificationChannel(
                 channelId,
                 channelName,
@@ -181,28 +186,20 @@ class MainActivity : AppCompatActivity() {
             // 채널을 이용하여 builder 생성
             builder = NotificationCompat.Builder(this, channelId)
 
-        }else {
+        } else {
             // 26 버전 이하
             builder = NotificationCompat.Builder(this)
         }
 
-//        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.chat) //이미지 설정
-//        val intent = Intent(this, SecondActivity::class.java) //클릭했을 때 넘어가는 페이지 설정
-//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        // 알림의 기본 정보
         builder.run {
             setSmallIcon(R.mipmap.ic_launcher)
             setWhen(System.currentTimeMillis())
             setContentTitle("키워드 알림")
             setContentText("설정한 키워드에 대한 알림이 도착했습니다.")
-            setStyle(NotificationCompat.BigTextStyle()
-                .bigText("설정한 키워드에 대한 알림이 도착했습니다!!"))
-//                        setLargeIcon(bitmap) //이미지 설정
-//            setStyle(NotificationCompat.BigPictureStyle()
-//                    .bigPicture(bitmap)
-//                    .bigLargeIcon(null))  // hide largeIcon while expanding
-//                        addAction(R.mipmap.ic_launcher, "Action", pendingIntent)
+            setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText("설정한 키워드에 대한 알림이 도착했습니다!!")
+            )
         }
 
 
