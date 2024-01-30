@@ -2,12 +2,13 @@ package com.nhkim.imagecollector
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.nhkim.imagecollector.data.Document
 import com.nhkim.imagecollector.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    var sharedList: MutableList<String> = mutableListOf()
+    var sharedList: MutableList<Document> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
