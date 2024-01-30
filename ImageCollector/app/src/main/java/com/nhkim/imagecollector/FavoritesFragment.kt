@@ -6,13 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import com.nhkim.imagecollector.databinding.FragmentFavoritesBinding
 
-class FavoritesFragment : Fragment() {
+class FavoritesFragment : Fragment(), ImageFavoriteAdapter.FavoriteItemClick {
 
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
-    private val imageAdapter by lazy { ImageAdapter() }
+    private val imageFavoriteAdapter by lazy { ImageFavoriteAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,24 +24,31 @@ class FavoritesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
-        return inflater.inflate(R.layout.fragment_favorites, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val mainActivity = activity as? MainActivity
         val sharedList = mainActivity?.sharedList
-        Log.d("favorite fragment", sharedList.toString())
 
-//        imageAdapter.submitList(responseData.documents)
-//        if(binding.rvImage.layoutManager == null){
-//            binding.rvImage.layoutManager = GridLayoutManager(context, 2)
-//            binding.rvImage.adapter = imageAdapter
-//        }
+        imageFavoriteAdapter.submitList(sharedList)
+
+        binding.rvImage.apply {
+            layoutManager = GridLayoutManager(context, 2)
+            adapter = imageFavoriteAdapter
+            imageFavoriteAdapter.setItemClick(this@FavoritesFragment)
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onDeleteClick(view: View, position: Int) {
+        Log.d("리스너", "onDeleteClick")
+        imageFavoriteAdapter.removeItem(position)
     }
 }
