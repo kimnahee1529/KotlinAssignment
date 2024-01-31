@@ -7,23 +7,29 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.nhkim.imagecollector.MainActivity
+import com.nhkim.imagecollector.SharedViewModel
 import com.nhkim.imagecollector.data.Document
 import com.nhkim.imagecollector.databinding.FragmentImageSearchBinding
 import com.nhkim.imagecollector.factory.ImageSearchViewModelFactory
 import com.nhkim.imagecollector.repository.ImageRepository
+import com.nhkim.imagecollector.repository.PreferencesRepository
 import com.nhkim.imagecollector.utils.UtilityKeyboard.hideKeyboard
 
 
 class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
+    private val favoriteKey = "saveFavoritesData"
 
     private var _binding: FragmentImageSearchBinding? = null
     private val binding get() = _binding!!
     private val imageSearchAdapter by lazy { ImageSearchAdapter() }
+
+    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val viewModel: ImageSearchViewModel by viewModels {
-        ImageSearchViewModelFactory(ImageRepository())
+        val preferences = requireContext().getSharedPreferences(favoriteKey, Context.MODE_PRIVATE)
+        ImageSearchViewModelFactory(ImageRepository(), PreferencesRepository(preferences))
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +64,6 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
     private fun initViewModel() = with(viewModel) {
         imagesData.observe(viewLifecycleOwner) { documents ->
             Log.d("fragment observe", "searchImages, $documents")
-
             showImages(documents)
         }
     }
@@ -91,18 +96,10 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
 
     override fun onHeartClick(view: View, position: Int) {
         Log.d("리스너", "onHeartClick")
-        val mainActivity = activity as? MainActivity
-        val sharedList = mainActivity?.sharedList
-
-        val clickedItem = imageSearchAdapter.getDocumentAtPosition(position)
-        if (clickedItem != null) {
-            val favoriteDocument = Document(
-                thumbnail_url = clickedItem.thumbnail_url,
-                display_sitename = clickedItem.display_sitename,
-                datetime = clickedItem.datetime
-            )
-            sharedList?.add(favoriteDocument)
-            clickedItem.isHearted = !clickedItem.isHearted
+        imageSearchAdapter.getDocumentAtPosition(position)?.let{ document ->
+            val d = document
+//            sharedViewModel.toggleFavorite(document)
+            viewModel.saveFavoritesDataList(document)
         }
 
     }
