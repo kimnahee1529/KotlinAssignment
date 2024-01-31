@@ -1,4 +1,4 @@
-package com.nhkim.imagecollector
+package com.nhkim.imagecollector.ui.search
 
 import android.app.Activity
 import android.content.Context
@@ -11,10 +11,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.nhkim.imagecollector.ImageSearchFragment.UtilityKeyboard.hideKeyboard
+import com.nhkim.imagecollector.MainActivity
+import com.nhkim.imagecollector.ui.search.ImageSearchFragment.UtilityKeyboard.hideKeyboard
 import com.nhkim.imagecollector.data.Document
 import com.nhkim.imagecollector.databinding.FragmentImageSearchBinding
-import com.nhkim.imagecollector.retrofit.NetWorkClient
+import com.nhkim.imagecollector.network.NetWorkClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

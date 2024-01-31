@@ -1,4 +1,4 @@
-package com.nhkim.imagecollector
+package com.nhkim.imagecollector.ui.favorites
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,11 +8,15 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.nhkim.imagecollector.FormatManager.loadImage
+import com.nhkim.imagecollector.utils.FormatManager
+import com.nhkim.imagecollector.utils.FormatManager.loadImage
+import com.nhkim.imagecollector.R
 import com.nhkim.imagecollector.data.Document
 import com.nhkim.imagecollector.databinding.RecyclerViewItemBinding
 
-class ImageFavoriteAdapter() : ListAdapter<Document, ImageFavoriteAdapter.Holder>(DocumentDiffCallback()) {
+class ImageFavoriteAdapter() : ListAdapter<Document, ImageFavoriteAdapter.Holder>(
+    DocumentDiffCallback()
+) {
 
     interface FavoriteItemClick {
         fun onDeleteClick(view: View, position: Int)

@@ -1,6 +1,5 @@
-package com.nhkim.imagecollector.retrofit
+package com.nhkim.imagecollector.network
 
-import android.media.Image
 import com.nhkim.imagecollector.data.ImageResponse
 import retrofit2.http.GET
 import retrofit2.http.Header

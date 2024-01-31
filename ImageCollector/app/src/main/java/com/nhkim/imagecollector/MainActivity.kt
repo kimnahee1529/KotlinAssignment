@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.nhkim.imagecollector.data.Document
 import com.nhkim.imagecollector.databinding.ActivityMainBinding
+import com.nhkim.imagecollector.ui.favorites.FavoritesFragment
+import com.nhkim.imagecollector.ui.search.ImageSearchFragment
 
 class MainActivity : AppCompatActivity() {
 

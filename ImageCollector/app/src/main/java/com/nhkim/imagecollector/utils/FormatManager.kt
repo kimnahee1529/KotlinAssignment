@@ -1,4 +1,4 @@
-package com.nhkim.imagecollector
+package com.nhkim.imagecollector.utils
 
 import android.widget.ImageView
 import com.bumptech.glide.Glide

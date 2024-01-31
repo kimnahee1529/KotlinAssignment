@@ -1,4 +1,4 @@
-package com.nhkim.imagecollector
+package com.nhkim.imagecollector.ui.favorites
 
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
+import com.nhkim.imagecollector.MainActivity
 import com.nhkim.imagecollector.databinding.FragmentFavoritesBinding
 
 class FavoritesFragment : Fragment(), ImageFavoriteAdapter.FavoriteItemClick {
@@ -49,6 +50,8 @@ class FavoritesFragment : Fragment(), ImageFavoriteAdapter.FavoriteItemClick {
 
     override fun onDeleteClick(view: View, position: Int) {
         Log.d("리스너", "onDeleteClick")
-        imageFavoriteAdapter.removeItem(position)
+        val currentList = imageFavoriteAdapter.currentList.toMutableList()
+        currentList.removeAt(position)
+        imageFavoriteAdapter.submitList(currentList)
     }
 }

@@ -1,4 +1,4 @@
-package com.nhkim.imagecollector.retrofit
+package com.nhkim.imagecollector.network
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
