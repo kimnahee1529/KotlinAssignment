@@ -1,20 +1,29 @@
 package com.nhkim.imagecollector.ui.favorites
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.nhkim.imagecollector.MainActivity
 import com.nhkim.imagecollector.databinding.FragmentFavoritesBinding
+import com.nhkim.imagecollector.factory.FavoriteImageViewModelFactory
+import com.nhkim.imagecollector.repository.PreferencesRepository
 
-class FavoritesFragment : Fragment(), ImageFavoriteAdapter.FavoriteItemClick {
+class FavoritesFragment : Fragment(), FavoriteImageAdapter.FavoriteItemClick {
+    private val favoriteKey = "saveFavoritesData"
 
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
-    private val imageFavoriteAdapter by lazy { ImageFavoriteAdapter() }
+    private val imageFavoriteAdapter by lazy { FavoriteImageAdapter() }
+
+    private val viewModel: FavoritesViewModel by viewModels {
+        val preferences = requireContext().getSharedPreferences(favoriteKey, Context.MODE_PRIVATE)
+        FavoriteImageViewModelFactory(PreferencesRepository(preferences))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,16 +39,20 @@ class FavoritesFragment : Fragment(), ImageFavoriteAdapter.FavoriteItemClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupImageRecyclerView()
+    }
 
-        val mainActivity = activity as? MainActivity
-        val sharedList = mainActivity?.sharedList
-
-        imageFavoriteAdapter.submitList(sharedList)
+    private fun setupImageRecyclerView() {
 
         binding.rvImage.apply {
             layoutManager = GridLayoutManager(context, 2)
             adapter = imageFavoriteAdapter
             imageFavoriteAdapter.setItemClick(this@FavoritesFragment)
+        }
+
+        viewModel.loadFavoritesDataList()
+        viewModel.favorites.observe(viewLifecycleOwner) {
+            imageFavoriteAdapter.submitList(it)
         }
     }
 
