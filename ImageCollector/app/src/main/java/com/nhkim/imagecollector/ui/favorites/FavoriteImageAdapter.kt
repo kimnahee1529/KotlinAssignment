@@ -14,7 +14,7 @@ import com.nhkim.imagecollector.R
 import com.nhkim.imagecollector.data.Document
 import com.nhkim.imagecollector.databinding.RecyclerViewItemBinding
 
-class ImageFavoriteAdapter() : ListAdapter<Document, ImageFavoriteAdapter.Holder>(
+class FavoriteImageAdapter() : ListAdapter<Document, FavoriteImageAdapter.Holder>(
     DocumentDiffCallback()
 ) {
 
@@ -53,20 +53,12 @@ class ImageFavoriteAdapter() : ListAdapter<Document, ImageFavoriteAdapter.Holder
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(document: Document) {
-            //TODO 함수로 빼기
-//            Glide.with(binding.root.context)
-//                .load(document.thumbnail_url)
-//                .into(binding.ivThumbnail)
-
             binding.ivThumbnail.loadImage(document.thumbnail_url)
 
             Log.d("Adapter썸네일", document.thumbnail_url)
             binding.ivThumbnail.clipToOutline = true
 
             binding.tvSiteName.text = document.display_sitename
-            //TODO 함수로 빼기
-//            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-//            binding.tvDateTime.text = formatter.format(document.datetime)
             FormatManager.formatDateToString(document.datetime)
             binding.ivHeart.isVisible = document.isHearted
 
@@ -81,12 +73,6 @@ class ImageFavoriteAdapter() : ListAdapter<Document, ImageFavoriteAdapter.Holder
 
     fun setItemClick(listener: FavoriteItemClick) {
         favoriteItemClick = listener
-    }
-
-    fun removeItem(position: Int){
-        val newList = currentList.toMutableList()
-        newList.removeAt(position)
-        submitList(newList)
     }
 
 }
