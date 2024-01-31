@@ -14,7 +14,8 @@ import com.nhkim.imagecollector.R
 import com.nhkim.imagecollector.data.Document
 import com.nhkim.imagecollector.databinding.RecyclerViewItemBinding
 
-class ImageSearchAdapter() : ListAdapter<Document, ImageSearchAdapter.Holder>(DocumentDiffCallback()) {
+class ImageSearchAdapter() :
+    ListAdapter<Document, ImageSearchAdapter.Holder>(DocumentDiffCallback()) {
 
     interface SearchItemClick {
         fun onHeartClick(view: View, position: Int)
@@ -42,27 +43,18 @@ class ImageSearchAdapter() : ListAdapter<Document, ImageSearchAdapter.Holder>(Do
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val item = getItem(position) // ListAdapter에서는 getItem() 메서드 사용
         holder.bind(item)
-        //여기서 isHearted 변수 상태 바꿔야하나?
     }
 
     inner class Holder(private val binding: RecyclerViewItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(document: Document) {
-            //TODO 함수로 빼기
-//            Glide.with(binding.root.context)
-//                .load(document.thumbnail_url)
-//                .into(binding.ivThumbnail)
             binding.ivThumbnail.loadImage(document.thumbnail_url)
 
             Log.d("Adapter썸네일", document.thumbnail_url)
             binding.ivThumbnail.clipToOutline = true
 
             binding.tvSiteName.text = document.display_sitename
-            //TODO 함수로 빼기
-
-//            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-//            binding.tvDateTime.text = formatter.format(document.datetime)
             FormatManager.formatDateToString(document.datetime)
 
             binding.ivHeart.isVisible = document.isHearted
