@@ -1,6 +1,5 @@
 package com.nhkim.imagecollector.ui.search
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -8,28 +7,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.nhkim.imagecollector.MainActivity
-import com.nhkim.imagecollector.ui.search.ImageSearchFragment.UtilityKeyboard.hideKeyboard
 import com.nhkim.imagecollector.data.Document
 import com.nhkim.imagecollector.databinding.FragmentImageSearchBinding
-import com.nhkim.imagecollector.network.NetWorkClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.lang.Exception
+import com.nhkim.imagecollector.factory.ImageSearchViewModelFactory
+import com.nhkim.imagecollector.repository.ImageRepository
+import com.nhkim.imagecollector.utils.UtilityKeyboard.hideKeyboard
 
 
 class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
 
-    var items = listOf<Document>()
-
     private var _binding: FragmentImageSearchBinding? = null
     private val binding get() = _binding!!
     private val imageSearchAdapter by lazy { ImageSearchAdapter() }
-
+    private val viewModel: ImageSearchViewModel by viewModels {
+        ImageSearchViewModelFactory(ImageRepository())
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -46,58 +41,40 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
         super.onViewCreated(view, savedInstanceState)
 
         loadData()
+        initViewModel()
 
         binding.btnSearch.setOnClickListener {
             val searchText = binding.etSearch.text.toString()
             Log.d("searchText", searchText)
-            communicateNetWork(searchText)
+            if (searchText.isNotEmpty()) {
+                Log.d("fragment 시작", "searchImages")
+                viewModel.searchImages(searchText)
+            }
             saveData()
             this.hideKeyboard()
         }
     }
 
+    private fun initViewModel() = with(viewModel) {
+        imagesData.observe(viewLifecycleOwner) { documents ->
+            Log.d("fragment observe", "searchImages, $documents")
+
+            showImages(documents)
+        }
+    }
+    private fun showImages(documents: List<Document>){
+        imageSearchAdapter.submitList(documents)
+        if (binding.rvImage.layoutManager == null) {
+            binding.rvImage.layoutManager = GridLayoutManager(context, 2)
+            binding.rvImage.adapter = imageSearchAdapter
+            imageSearchAdapter.setItemClick(this@ImageSearchFragment)
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
 
-    private fun communicateNetWork(search: String) = lifecycleScope.launch {
-        try {
-            val authKey = "KakaoAK ${NetWorkClient.apiKey}"
-            val responseData =
-                NetWorkClient.imageNetWork.getThumbnailImage(authKey, search, size = 80)
-            Log.d("responseData", responseData.documents.toString())
-
-            withContext(Dispatchers.Main) {
-                imageSearchAdapter.submitList(responseData.documents)
-                if (binding.rvImage.layoutManager == null) {
-                    binding.rvImage.layoutManager = GridLayoutManager(context, 2)
-                    binding.rvImage.adapter = imageSearchAdapter
-                    imageSearchAdapter.setItemClick(this@ImageSearchFragment)
-                    //setItemClick은 왜 만든거지????
-                }
-            }
-
-        } catch (e: Exception) {
-            Log.e("NetworkError", "Failed to fetch data", e)
-        }
-    }
-
-    object UtilityKeyboard {
-        fun Fragment.hideKeyboard() {
-            view?.let { activity?.hideKeyboard(it) }
-        }
-
-        fun Activity.hideKeyboard() {
-            hideKeyboard(currentFocus ?: View(this))
-        }
-
-        fun Context.hideKeyboard(view: View) {
-            val inputMethodManager =
-                getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-        }
-    }
 
     private fun saveData() {
         val pref = activity?.getSharedPreferences("pref", Context.MODE_PRIVATE)
