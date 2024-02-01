@@ -26,11 +26,11 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
     private val binding get() = _binding!!
     private val imageSearchAdapter by lazy { ImageSearchAdapter() }
 
-    private val sharedViewModel: SharedViewModel by activityViewModels()
     private val viewModel: ImageSearchViewModel by viewModels {
         val preferences = requireContext().getSharedPreferences(favoriteKey, Context.MODE_PRIVATE)
         ImageSearchViewModelFactory(ImageRepository(), PreferencesRepository(preferences))
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -61,13 +61,18 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
+
     private fun initViewModel() = with(viewModel) {
         imagesData.observe(viewLifecycleOwner) { documents ->
-            Log.d("fragment observe", "searchImages, $documents")
             showImages(documents)
         }
     }
-    private fun showImages(documents: List<Document>){
+
+    private fun showImages(documents: List<Document>) {
         imageSearchAdapter.submitList(documents)
         if (binding.rvImage.layoutManager == null) {
             binding.rvImage.layoutManager = GridLayoutManager(context, 2)
@@ -75,6 +80,7 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
             imageSearchAdapter.setItemClick(this@ImageSearchFragment)
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
@@ -96,10 +102,8 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
 
     override fun onHeartClick(view: View, position: Int) {
         Log.d("리스너", "onHeartClick")
-        imageSearchAdapter.getDocumentAtPosition(position)?.let{ document ->
-            val d = document
-//            sharedViewModel.toggleFavorite(document)
-            viewModel.saveFavoritesDataList(document)
+        imageSearchAdapter.getDocumentAtPosition(position)?.let { document ->
+            viewModel.toggleFavorite(document)
         }
 
     }
