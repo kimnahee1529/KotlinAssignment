@@ -15,8 +15,6 @@ class ImageSearchViewModel(
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
-    private val selectedDocuments = mutableListOf<Document>()
-
     //이미지 받아오기
     private val _imagesData = MutableLiveData<List<Document>>()
     val imagesData: LiveData<List<Document>> = _imagesData
@@ -38,20 +36,8 @@ class ImageSearchViewModel(
         }
     }
 
-    fun saveFavoritesDataList(document: Document) {
-        selectedDocuments.add(document)
-        selectedDocuments
-        preferencesRepository.saveFavoritesDataList(selectedDocuments)
-    }
-
-    // 즐겨찾기 추가 또는 제거
     fun toggleFavorite(document: Document) {
-        val currentFavorites = _favorites.value ?: emptyList()
-        if (currentFavorites.contains(document)) {
-            _favorites.value = currentFavorites - document
-        } else {
-            _favorites.value = currentFavorites + document
-        }
+        preferencesRepository.toggleFavorite(document)
     }
 }
 
