@@ -42,6 +42,11 @@ class FavoritesFragment : Fragment(), FavoriteImageAdapter.FavoriteItemClick {
         setupImageRecyclerView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        setupImageRecyclerView()
+    }
+
     private fun setupImageRecyclerView() {
 
         binding.rvImage.apply {
@@ -64,7 +69,9 @@ class FavoritesFragment : Fragment(), FavoriteImageAdapter.FavoriteItemClick {
     override fun onDeleteClick(view: View, position: Int) {
         Log.d("리스너", "onDeleteClick")
         val currentList = imageFavoriteAdapter.currentList.toMutableList()
+        val documentToDelete = currentList[position]
         currentList.removeAt(position)
         imageFavoriteAdapter.submitList(currentList)
+        viewModel.deleteFavorite(documentToDelete)
     }
 }
