@@ -7,11 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.nhkim.imagecollector.SharedViewModel
-import com.nhkim.imagecollector.data.Document
+import com.nhkim.imagecollector.data.image.Document
 import com.nhkim.imagecollector.databinding.FragmentImageSearchBinding
 import com.nhkim.imagecollector.factory.ImageSearchViewModelFactory
 import com.nhkim.imagecollector.repository.ImageRepository
@@ -55,6 +53,7 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
             if (searchText.isNotEmpty()) {
                 Log.d("fragment 시작", "searchImages")
                 viewModel.searchImages(searchText)
+//                viewModel.searchVideos(searchText)
             }
             saveData()
             this.hideKeyboard()
@@ -70,6 +69,10 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
         imagesData.observe(viewLifecycleOwner) { documents ->
             showImages(documents)
         }
+//        videosData.observe(viewLifecycleOwner){ documents ->
+//            documents
+////            showVideos(documents)
+//        }
     }
 
     private fun showImages(documents: List<Document>) {
@@ -80,6 +83,15 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
             imageSearchAdapter.setItemClick(this@ImageSearchFragment)
         }
     }
+
+//    private fun showVideos(documents: List<VideoDocument>) {
+//        imageSearchAdapter.submitList(documents)
+//        if (binding.rvImage.layoutManager == null) {
+//            binding.rvImage.layoutManager = GridLayoutManager(context, 2)
+//            binding.rvImage.adapter = imageSearchAdapter
+//            imageSearchAdapter.setItemClick(this@ImageSearchFragment)
+//        }
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

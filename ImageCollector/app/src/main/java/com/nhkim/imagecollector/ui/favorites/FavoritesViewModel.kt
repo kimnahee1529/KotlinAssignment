@@ -3,7 +3,7 @@ package com.nhkim.imagecollector.ui.favorites
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.nhkim.imagecollector.data.Document
+import com.nhkim.imagecollector.data.image.Document
 import com.nhkim.imagecollector.repository.PreferencesRepository
 
 class FavoritesViewModel(

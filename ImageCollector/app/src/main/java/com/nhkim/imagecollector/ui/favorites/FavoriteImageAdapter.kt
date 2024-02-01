@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nhkim.imagecollector.utils.FormatManager
 import com.nhkim.imagecollector.utils.FormatManager.loadImage
 import com.nhkim.imagecollector.R
-import com.nhkim.imagecollector.data.Document
+import com.nhkim.imagecollector.data.image.Document
 import com.nhkim.imagecollector.databinding.RecyclerViewItemBinding
 
 class FavoriteImageAdapter() : ListAdapter<Document, FavoriteImageAdapter.Holder>(
@@ -53,7 +53,8 @@ class FavoriteImageAdapter() : ListAdapter<Document, FavoriteImageAdapter.Holder
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(document: Document) {
-            binding.ivThumbnail.loadImage(document.thumbnail_url)
+            val imageUrl = document.thumbnail_url ?: "defaultImageUrl"
+            binding.ivThumbnail.loadImage(imageUrl)
 
             Log.d("Adapter썸네일", document.thumbnail_url)
             binding.ivThumbnail.clipToOutline = true
