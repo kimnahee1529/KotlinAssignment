@@ -32,8 +32,8 @@
             <Button
                 android:id="@+id/btn_search"
                 android:layout_width="0dp"
-                android:text="검색"
                 android:layout_height="match_parent"
+                android:text="검색"
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -42,10 +42,29 @@
             android:id="@+id/rv_image"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            tools:listitem="@layout/recycler_view_item"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
-            tools:layout_editor_absoluteX="26dp" />
+            tools:layout_editor_absoluteX="26dp"
+            tools:listitem="@layout/recycler_view_item" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/white"
+            android:elevation="0dp"
+            android:hapticFeedbackEnabled="true"
+            android:src="@android:drawable/arrow_up_float"
+            android:tint="@null"
+            app:borderWidth="0dp"
+            app:fabCustomSize="40dp"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:maxImageSize="10dp"
+            tools:ignore="ContentDescription" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
