@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nhkim.imagecollector.data.Document
+import com.nhkim.imagecollector.data.image.Document
 import com.nhkim.imagecollector.repository.ImageRepository
 import com.nhkim.imagecollector.repository.PreferencesRepository
 import kotlinx.coroutines.launch
@@ -32,6 +32,19 @@ class ImageSearchViewModel(
                 _imagesData.postValue(response.documents)
             }.onFailure {
                 Log.e("TAG", "fetchTrendingVideos() failed! : ${it.message}")
+            }
+        }
+    }
+
+    fun searchVideos(query: String) {
+        Log.d("viewModel 시작", "searchVideos")
+        viewModelScope.launch {
+            runCatching {
+                val response = imageRepository.searchVideo(query)
+                Log.d("viewModel 반환", "searchVideos, $response")
+//                _imagesData.postValue(response.documents)
+            }.onFailure {
+                Log.e("TAG", "searchVideos() failed! : ${it.message}")
             }
         }
     }

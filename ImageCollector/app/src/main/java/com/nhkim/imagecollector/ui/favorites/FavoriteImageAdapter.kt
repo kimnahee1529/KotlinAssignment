@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nhkim.imagecollector.utils.FormatManager
 import com.nhkim.imagecollector.utils.FormatManager.loadImage
 import com.nhkim.imagecollector.R
-import com.nhkim.imagecollector.data.Document
+import com.nhkim.imagecollector.data.image.Document
 import com.nhkim.imagecollector.databinding.RecyclerViewItemBinding
 
 class FavoriteImageAdapter() : ListAdapter<Document, FavoriteImageAdapter.Holder>(

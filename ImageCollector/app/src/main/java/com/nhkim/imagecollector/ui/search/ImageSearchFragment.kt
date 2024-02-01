@@ -7,11 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.nhkim.imagecollector.SharedViewModel
-import com.nhkim.imagecollector.data.Document
+import com.nhkim.imagecollector.data.image.Document
 import com.nhkim.imagecollector.databinding.FragmentImageSearchBinding
 import com.nhkim.imagecollector.factory.ImageSearchViewModelFactory
 import com.nhkim.imagecollector.repository.ImageRepository

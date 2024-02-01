@@ -3,7 +3,7 @@ package com.nhkim.imagecollector.repository
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.nhkim.imagecollector.data.Document
+import com.nhkim.imagecollector.data.image.Document
 
 class PreferencesRepository(private val sharedPreferences: SharedPreferences) {
     private val favoriteKey = "saveFavoritesData"

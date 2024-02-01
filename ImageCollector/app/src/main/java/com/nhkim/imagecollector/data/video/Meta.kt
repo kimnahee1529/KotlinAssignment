@@ -1,4 +1,4 @@
-package com.nhkim.imagecollector.data
+package com.nhkim.imagecollector.data.video
 
 import com.google.gson.annotations.SerializedName
 
