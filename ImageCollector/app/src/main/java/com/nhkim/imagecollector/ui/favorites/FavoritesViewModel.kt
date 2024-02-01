@@ -8,15 +8,18 @@ import com.nhkim.imagecollector.repository.PreferencesRepository
 
 class FavoritesViewModel(
     private val preferencesRepository: PreferencesRepository
-): ViewModel() {
+) : ViewModel() {
 
     //즐겨찾기 목록
     private val _favorites = MutableLiveData<List<Document>>()
     val favorites: LiveData<List<Document>> = _favorites
 
-    fun loadFavoritesDataList(){
+    fun loadFavoritesDataList() {
         val dataList = preferencesRepository.loadFavoritesDataList()
         _favorites.value = dataList
     }
 
+    fun deleteFavorite(document: Document) {
+        preferencesRepository.deleteFavorite(document)
+    }
 }
