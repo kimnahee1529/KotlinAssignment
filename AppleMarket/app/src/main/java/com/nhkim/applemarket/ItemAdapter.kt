@@ -9,10 +9,12 @@ import java.text.DecimalFormat
 
 class ItemAdapter(val item: MutableList<Item>) : RecyclerView.Adapter<ItemAdapter.Holder>() {
 
+    var itemClick: ItemClick? = null
     interface ItemClick{
         fun onClick(view: View, position: Int)
+        fun onLongClick(view: View, position: Int): Boolean
     }
-    var itemClick: ItemClick? = null
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemAdapter.Holder {
         val binding = ItemRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -25,10 +27,19 @@ class ItemAdapter(val item: MutableList<Item>) : RecyclerView.Adapter<ItemAdapte
         holder.itemView.setOnClickListener{
             itemClick?.onClick(it, position)
         }
+        holder.itemView.setOnLongClickListener {
+            itemClick?.onLongClick(it, position) ?: true
+        }
     }
 
     override fun getItemCount(): Int = item.size
 
+    // 데이터 삭제
+    fun removeItem(position: Int) {
+        item.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, item.size)
+    }
     inner class Holder(binding: ItemRecyclerviewBinding) : RecyclerView.ViewHolder(binding.root) {
 
         private val title = binding.tvItemTitle

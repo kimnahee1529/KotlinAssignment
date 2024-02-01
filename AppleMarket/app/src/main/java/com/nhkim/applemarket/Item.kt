@@ -1,5 +1,6 @@
 package com.nhkim.applemarket
 
+import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -12,7 +13,7 @@ data class Item(
     val price: Int,
     val itemImage: Int,
     val address: String?,
-    val like: Int,
-    val chat: Int
+    var like: Int,
+    val chat: Int,
+    var isLike: Boolean
 ) : Parcelable
-

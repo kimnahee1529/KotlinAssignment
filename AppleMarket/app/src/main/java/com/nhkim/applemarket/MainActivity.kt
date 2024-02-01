@@ -3,10 +3,8 @@ package com.nhkim.applemarket
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.net.Uri
@@ -15,72 +13,118 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.AlphaAnimation
 import android.widget.Toast
-import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.nhkim.applemarket.ItemManager.itemList
 import com.nhkim.applemarket.databinding.ActivityMainBinding
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private var selectedPosition = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        
+        setupRecyclerView()
+        setupFloatingActionButton()
+        setupNotificationOnClickListeners()
 
-        val itemKey = "Item"
-//
-        val itemAdapter = ItemAdapter(ItemManager.itemList)
-        binding.rvMain.clipToOutline = true
+    }
 
-        with(binding.rvMain){
-//            this.adapter = itemAdapter
-//            adapter = itemAdapter
-            this@with.adapter = itemAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
-        }
-
-
+    private fun setupNotificationOnClickListeners() {
         binding.ivBell.setOnClickListener {
             notification()
         }
+    }
 
-        itemAdapter.itemClick = object: ItemAdapter.ItemClick{
+    private fun setupFloatingActionButton() {
+        val fadeIn = AlphaAnimation(0f, 1f).apply { duration = 500 }
+        val fadeOut = AlphaAnimation(1f, 0f).apply { duration = 500 }
+        var isTop = true
+
+        binding.rvMain.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!binding.rvMain.canScrollVertically(-1)
+                    && newState == RecyclerView.SCROLL_STATE_IDLE
+                ) {
+                    binding.floatingBtn.startAnimation(fadeOut)
+                    binding.floatingBtn.visibility = View.GONE
+                    isTop = true
+                    Log.d("myLog", "Top")
+                } else {
+                    if (isTop) {
+                        binding.floatingBtn.visibility = View.VISIBLE
+                        binding.floatingBtn.startAnimation(fadeIn)
+                        isTop = false
+                        Log.d("myLog", "Not Top")
+                    }
+                }
+            }
+        })
+
+        if (!binding.rvMain.canScrollVertically(-1)) {
+            binding.floatingBtn.visibility = View.GONE
+        }
+        binding.floatingBtn.setOnClickListener {
+            binding.rvMain.smoothScrollToPosition(0)
+        }
+    }
+
+    private fun setupRecyclerView() {
+        val itemAdapter = ItemAdapter(itemList)
+
+        with(binding.rvMain) {
+            adapter = itemAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity)
+        }
+
+        itemAdapter.itemClick = object : ItemAdapter.ItemClick {
             override fun onClick(view: View, position: Int) {
                 val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
-                    putExtra(itemKey, ItemManager.itemList[position])
+                    putExtra(Constants.ITEM_INDEX, position)
+                    putExtra(Constants.ITEM_OBJECT, itemList[position])
                 }
                 startActivity(intent)
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
 
             }
-        }
 
+            override fun onLongClick(view: View, position: Int): Boolean {
+                selectedPosition = position
+                deleteDialog(itemAdapter)
+                return true
+            }
+        }
     }
+
+    @Deprecated("Deprecated in Java")
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-        popUpDialog()
+        exitDialog()
     }
-    private fun popUpDialog(){
-        var builder = AlertDialog.Builder(this)
+
+    private fun exitDialog() {
+        val builder = AlertDialog.Builder(this)
         builder.setTitle("종료")
         builder.setMessage("정말 종료하시겠습니까?")
-        builder.setIcon(R.mipmap.ic_launcher)
+        builder.setIcon(R.drawable.chat)
 
-        // 버튼 클릭시에 무슨 작업을 할 것인가!
-        val listener = object : DialogInterface.OnClickListener {
-            override fun onClick(p0: DialogInterface?, p1: Int) {
-                when (p1) {
-//                        DialogInterface.BUTTON_POSITIVE ->
-//                            binding.tvTitle.text = "BUTTON_POSITIVE"
-//                        DialogInterface.BUTTON_NEUTRAL ->
-//                            binding.tvTitle.text = "BUTTON_NEUTRAL"
-//                        DialogInterface.BUTTON_NEGATIVE ->
-//                            binding.tvTitle.text = "BUTTON_NEGATIVE"
-                }
+        val listener = DialogInterface.OnClickListener { dialog, whichButton ->
+            when (whichButton) {
+                DialogInterface.BUTTON_POSITIVE ->
+                    finish()
+
+                DialogInterface.BUTTON_NEGATIVE ->
+                    dialog.dismiss()
             }
         }
 
@@ -90,14 +134,36 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
-    fun notification(){
+    private fun deleteDialog(itemAdapter: ItemAdapter) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("상품 삭제")
+        builder.setMessage("상품을 정말로 삭제하시겠습니까?")
+        builder.setIcon(R.drawable.chat)
+
+        val listener = DialogInterface.OnClickListener { _, whichButton ->
+            when (whichButton) {
+                DialogInterface.BUTTON_POSITIVE ->
+                    if (selectedPosition >= 0) {
+                        itemAdapter.removeItem(selectedPosition)
+                        selectedPosition = -1
+                    }
+            }
+        }
+
+        builder.setPositiveButton("확인", listener)
+        builder.setNegativeButton("취소", listener)
+
+        builder.show()
+    }
+
+    private fun notification() {
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         val builder: NotificationCompat.Builder
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // 26 버전 이상
-            val channelId="one-channel"
-            val channelName="My Channel One"
+            val channelId = "one-channel"
+            val channelName = "My Channel One"
             val channel = NotificationChannel(
                 channelId,
                 channelName,
@@ -120,28 +186,20 @@ class MainActivity : AppCompatActivity() {
             // 채널을 이용하여 builder 생성
             builder = NotificationCompat.Builder(this, channelId)
 
-        }else {
+        } else {
             // 26 버전 이하
             builder = NotificationCompat.Builder(this)
         }
 
-        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.pizza)
-//        val intent = Intent(this, SecondActivity::class.java)
-//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        // 알림의 기본 정보
         builder.run {
             setSmallIcon(R.mipmap.ic_launcher)
             setWhen(System.currentTimeMillis())
             setContentTitle("키워드 알림")
             setContentText("설정한 키워드에 대한 알림이 도착했습니다.")
-            setStyle(NotificationCompat.BigTextStyle()
-                .bigText("설정한 키워드에 대한 알림이 도착했습니다!!"))
-                        setLargeIcon(bitmap)
-//            setStyle(NotificationCompat.BigPictureStyle()
-//                    .bigPicture(bitmap)
-//                    .bigLargeIcon(null))  // hide largeIcon while expanding
-//                        addAction(R.mipmap.ic_launcher, "Action", pendingIntent)
+            setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText("설정한 키워드에 대한 알림이 도착했습니다!!")
+            )
         }
 
 
