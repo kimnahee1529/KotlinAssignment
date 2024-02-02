@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.nhkim.imagecollector.data.image.Document
+import com.nhkim.imagecollector.data.model.SearchItemModel
 import com.nhkim.imagecollector.databinding.FragmentImageSearchBinding
 import com.nhkim.imagecollector.factory.ImageSearchViewModelFactory
 import com.nhkim.imagecollector.repository.ImageRepository
@@ -29,53 +29,46 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
         ImageSearchViewModelFactory(ImageRepository(), PreferencesRepository(preferences))
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentImageSearchBinding.inflate(inflater, container, false)
+
+        setupListeners()
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         loadData()
-        initViewModel()
+        observeViewModel()
 
+    }
+
+    private fun observeViewModel() = with(viewModel) {
+        imagesData.observe(viewLifecycleOwner) { documents ->
+            updateSearchResults(documents)
+        }
+    }
+
+    private fun setupListeners() {
         binding.btnSearch.setOnClickListener {
             val searchText = binding.etSearch.text.toString()
-            Log.d("searchText", searchText)
             if (searchText.isNotEmpty()) {
-                Log.d("fragment 시작", "searchImages")
-                viewModel.searchImages(searchText)
-//                viewModel.searchVideos(searchText)
+                viewModel.searchData(searchText)
             }
             saveData()
             this.hideKeyboard()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-    }
-
-    private fun initViewModel() = with(viewModel) {
-        imagesData.observe(viewLifecycleOwner) { documents ->
-            showImages(documents)
+        binding.floatingBtn.setOnClickListener {
+            binding.rvImage.smoothScrollToPosition(0)
         }
-//        videosData.observe(viewLifecycleOwner){ documents ->
-//            documents
-////            showVideos(documents)
-//        }
     }
 
-    private fun showImages(documents: List<Document>) {
+    private fun updateSearchResults(documents: List<SearchItemModel>) {
         imageSearchAdapter.submitList(documents)
         if (binding.rvImage.layoutManager == null) {
             binding.rvImage.layoutManager = GridLayoutManager(context, 2)
@@ -83,15 +76,6 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
             imageSearchAdapter.setItemClick(this@ImageSearchFragment)
         }
     }
-
-//    private fun showVideos(documents: List<VideoDocument>) {
-//        imageSearchAdapter.submitList(documents)
-//        if (binding.rvImage.layoutManager == null) {
-//            binding.rvImage.layoutManager = GridLayoutManager(context, 2)
-//            binding.rvImage.adapter = imageSearchAdapter
-//            imageSearchAdapter.setItemClick(this@ImageSearchFragment)
-//        }
-//    }
 
     override fun onDestroy() {
         super.onDestroy()

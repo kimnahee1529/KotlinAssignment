@@ -11,12 +11,9 @@ class ImageRepository {
         val authKey = "KakaoAK ${NetWorkClient.apiKey}"
         return NetWorkClient.imageNetWork.getThumbnailImage(authKey, search, size = 80)
     }
-
     suspend fun searchVideo(search: String): VideoResponse {
         Log.d("ImageRepository", "searchVideo")
         val authKey = "KakaoAK ${NetWorkClient.apiKey}"
-        return NetWorkClient.videoNetWork.getThumbnailImage(authKey, search)
+        return NetWorkClient.videoNetWork.getThumbnailVideo(authKey, search)
     }
-
-
 }
