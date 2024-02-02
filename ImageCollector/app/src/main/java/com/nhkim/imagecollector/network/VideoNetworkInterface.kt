@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface VideoNetworkInterface {
     @GET("v2/search/vclip")
-    suspend fun getThumbnailImage(
+    suspend fun getThumbnailVideo(
         @Header("Authorization") authorization: String,
         @Query("query") query: String,
         @Query("sort") sort: String? = "recency", // 선택적 파라미터는 기본값을 null로 설정할 수 있습니다.
