@@ -19,11 +19,9 @@ import com.nhkim.imagecollector.utils.UtilityKeyboard.hideKeyboard
 
 class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
     private val favoriteKey = "saveFavoritesData"
-
     private var _binding: FragmentImageSearchBinding? = null
     private val binding get() = _binding!!
     private val imageSearchAdapter by lazy { ImageSearchAdapter() }
-
     private val viewModel: ImageSearchViewModel by viewModels {
         val preferences = requireContext().getSharedPreferences(favoriteKey, Context.MODE_PRIVATE)
         ImageSearchViewModelFactory(ImageRepository(), PreferencesRepository(preferences))
@@ -39,13 +37,10 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         loadData()
         observeViewModel()
-
     }
 
     private fun observeViewModel() = with(viewModel) {
@@ -57,6 +52,7 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
     private fun setupListeners() {
         binding.btnSearch.setOnClickListener {
             val searchText = binding.etSearch.text.toString()
+
             if (searchText.isNotEmpty()) {
                 viewModel.searchData(searchText)
             }
@@ -101,7 +97,5 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
         imageSearchAdapter.getDocumentAtPosition(position)?.let { document ->
             viewModel.toggleFavorite(document)
         }
-
     }
-
 }
