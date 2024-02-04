@@ -26,6 +26,7 @@
                 android:id="@+id/et_search"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 app:layout_constraintEnd_toStartOf="@+id/btn_search"
                 app:layout_constraintStart_toStartOf="parent" />
 

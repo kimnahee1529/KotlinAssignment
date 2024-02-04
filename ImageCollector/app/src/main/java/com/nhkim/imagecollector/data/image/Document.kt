@@ -1,4 +1,4 @@
-package com.nhkim.imagecollector.data
+package com.nhkim.imagecollector.data.image
 
 import java.util.Date
 

@@ -7,11 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.nhkim.imagecollector.SharedViewModel
-import com.nhkim.imagecollector.data.Document
+import com.nhkim.imagecollector.data.model.SearchItemModel
 import com.nhkim.imagecollector.databinding.FragmentImageSearchBinding
 import com.nhkim.imagecollector.factory.ImageSearchViewModelFactory
 import com.nhkim.imagecollector.repository.ImageRepository
@@ -21,18 +19,12 @@ import com.nhkim.imagecollector.utils.UtilityKeyboard.hideKeyboard
 
 class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
     private val favoriteKey = "saveFavoritesData"
-
     private var _binding: FragmentImageSearchBinding? = null
     private val binding get() = _binding!!
     private val imageSearchAdapter by lazy { ImageSearchAdapter() }
-
     private val viewModel: ImageSearchViewModel by viewModels {
         val preferences = requireContext().getSharedPreferences(favoriteKey, Context.MODE_PRIVATE)
         ImageSearchViewModelFactory(ImageRepository(), PreferencesRepository(preferences))
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -40,39 +32,39 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentImageSearchBinding.inflate(inflater, container, false)
+
+        setupListeners()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         loadData()
-        initViewModel()
+        observeViewModel()
+    }
 
+    private fun observeViewModel() = with(viewModel) {
+        imagesData.observe(viewLifecycleOwner) { documents ->
+            updateSearchResults(documents)
+        }
+    }
+
+    private fun setupListeners() {
         binding.btnSearch.setOnClickListener {
             val searchText = binding.etSearch.text.toString()
-            Log.d("searchText", searchText)
+
             if (searchText.isNotEmpty()) {
-                Log.d("fragment 시작", "searchImages")
-                viewModel.searchImages(searchText)
+                viewModel.searchData(searchText)
             }
             saveData()
             this.hideKeyboard()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-    }
-
-    private fun initViewModel() = with(viewModel) {
-        imagesData.observe(viewLifecycleOwner) { documents ->
-            showImages(documents)
+        binding.floatingBtn.setOnClickListener {
+            binding.rvImage.smoothScrollToPosition(0)
         }
     }
 
-    private fun showImages(documents: List<Document>) {
+    private fun updateSearchResults(documents: List<SearchItemModel>) {
         imageSearchAdapter.submitList(documents)
         if (binding.rvImage.layoutManager == null) {
             binding.rvImage.layoutManager = GridLayoutManager(context, 2)
@@ -105,7 +97,5 @@ class ImageSearchFragment : Fragment(), ImageSearchAdapter.SearchItemClick {
         imageSearchAdapter.getDocumentAtPosition(position)?.let { document ->
             viewModel.toggleFavorite(document)
         }
-
     }
-
 }
